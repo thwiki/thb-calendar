@@ -6,7 +6,7 @@
           (events = eventListFromDay(data.day)),
           (ix = 0))
         "
-           style="height: 100%"
+           style="height: 100%;"
       >
         <div :class="
             'day ' + ([0, 6].includes(date.getDay()) ? 'weekend ' : '') + (HD ? HD.status && (HD.status == '1' ? 'holiday' : 'work') : '')
@@ -89,6 +89,8 @@
   </el-calendar>
 </template>
 <script>
+import axios from "axios";
+import jsonp from "jsonp";
 export default {
   name: "calendar1",
   data() {
@@ -145,42 +147,29 @@ export default {
       let month = date.getMonth() + 1;
       let _this = this;
       let t = new Date().getTime();
-      this.jq.ajax({
-        url: "https://sp1.baidu.com/8aQDcjqpAAV3otqbppnN2DJv/api.php",
-        data: {
-          tn: "wisetpl",
-          format: "json",
-          resource_id: 39043,
-          query: year + "年" + month + "月",
-          t: t,
-        },
-        dataType: "jsonp",
-        jsonp: "cb",
-        type: "get",
-        success: function (ret) {
-          if (ret.status == "0" && ret.data[0]) {
-            let data = ret.data[0]["almanac"];
-            // data = data.filter(function (v) {
-            //     if (v.status) {
-            //         return true;
-            //     }
-            //     return false;
-            // });
-            data = data.map(function (v) {
-              let time = new Date(v.oDate).Format("yyyy-MM-dd");
-              let lunarDate = v.lunarDate == "1" ? v.lMonth + "月" : v.lDate;
-              return {
-                startDate: time,
-                endDate: time,
-                event: "",
-                desc: "",
-                status: v.status || "",
-                term: v.term ? v.term.split(" ")[0] : lunarDate,
-              };
-            });
-            _this.baiduDays = data;
-          }
-        },
+      jsonp(`https://sp1.baidu.com/8aQDcjqpAAV3otqbppnN2DJv/api.php?tn=wisetpl&format=json&resource_id=39043&query=${year}年${month}月&t=${t}`,{ param:"cb"},(err,ret)=>{
+        if (ret.status == "0" && ret.data[0]) {
+          let data = ret.data[0]["almanac"];
+          // data = data.filter(function (v) {
+          //     if (v.status) {
+          //         return true;
+          //     }
+          //     return false;
+          // });
+          data = data.map(function (v) {
+            let time = new Date(v.oDate).Format("yyyy-MM-dd");
+            let lunarDate = v.lunarDate == "1" ? v.lMonth + "月" : v.lDate;
+            return {
+              startDate: time,
+              endDate: time,
+              event: "",
+              desc: "",
+              status: v.status || "",
+              term: v.term ? v.term.split(" ")[0] : lunarDate,
+            };
+          });
+          _this.baiduDays = data;
+        }
       });
     },
     getHoliday(day) {
@@ -201,15 +190,9 @@ export default {
       if (this.userList.length > 0) {
         this.dateList = this.userList;
       } else {
-        this.jq
-            .ajax({
-              url:
-                  "https://calendar.thwiki.cc/events/" + startDate + "/" + endDate,
-              dataType: "json",
-            })
-            .done(function (result) {
-              _this.parseResult(result);
-            });
+        axios.get(`https://calendar.thwiki.cc/events/${startDate}/${endDate}`).then(ret=>{
+          this.parseResult(ret.data);
+        });
       }
     },
     parseResult(result) {

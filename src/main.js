@@ -1,9 +1,8 @@
 import Vue from 'vue'
-import App from './App.vue'
 import './plugins/element.js'
+import App from './App.vue'
 
 Vue.config.productionTip = false
-Vue.prototype.jq = window.jQuery;
 
 // RLQ是MediaWiki保存异步执行函数的数组
 if (process.env.NODE_ENV === 'production') {
