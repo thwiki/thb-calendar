@@ -30,7 +30,7 @@ jobs:
           path: node_modules
           key: ${{runner.OS}}-${{hashFiles('**/yarn.lock')}}
 
-      - name: 4. 安装插件
+      - name: 4. 安装依赖
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
         run: |
           export TZ='Asia/Shanghai'
@@ -54,21 +54,30 @@ jobs:
         with:
           path: ./description.txt
 
-      - name: 8. 创建GitHub Release
+      - name: 8. 发布
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+      
+      - name: 9. 创建GitHub Release
         id: create_release
         uses: actions/create-release@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{steps.version.outputs.value}}
+          tag_name: ${{steps.version.outputs.value}}
           release_name: v${{steps.version.outputs.value}}
           body: ${{steps.description.outputs.content}}
           draft: false
           prerelease: false
 
-      - name: 9. 刷新缓存
+      - name: 10. 刷新缓存
         run: |
-          curl https://purge.jsdelivr.net/npm/iemotion-pic@latest/dist/js/app.js
-          curl https://purge.jsdelivr.net/npm/iemotion-pic@latest/dist/js/chunk-vendors.js
-          curl https://purge.jsdelivr.net/npm/iemotion-pic@latest/dist/css/app.css
-          curl https://purge.jsdelivr.net/npm/iemotion-pic@latest/dist/css/chunk-vendors.css
+          curl https://purge.jsdelivr.net/npm/thb-calendar@latest/dist/js/app.js
+          curl https://purge.jsdelivr.net/npm/thb-calendar@latest/dist/js/chunk-vendors.js
+          curl https://purge.jsdelivr.net/npm/thb-calendar@latest/dist/css/app.css
+          curl https://purge.jsdelivr.net/npm/thb-calendar@latest/dist/css/chunk-vendors.css
+          curl https://purge.jsdelivr.net/gh/thwiki/thb-calendar@latest/dist/js/app.js
+          curl https://purge.jsdelivr.net/gh/thwiki/thb-calendar@latest/dist/js/chunk-vendors.js
+          curl https://purge.jsdelivr.net/gh/thwiki/thb-calendar@latest/dist/css/app.css
+          curl https://purge.jsdelivr.net/gh/thwiki/thb-calendar@latest/dist/css/chunk-vendors.css
