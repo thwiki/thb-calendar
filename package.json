@@ -7,6 +7,12 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
+	"author": "whuihuan@outlook.com",
+	"homepage": "https://thwiki.cc",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/thwiki/thb-calendar.git"
+	},
   "dependencies": {
     "axios": "^0.26.1",
     "core-js": "^3.6.5",

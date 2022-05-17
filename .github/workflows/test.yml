@@ -6,7 +6,7 @@ on:
       - dev
 
 jobs:
-  publish-npm:
+  test-package:
     runs-on: ubuntu-latest
     strategy:
       matrix:
