@@ -2,47 +2,29 @@
   <el-calendar v-model="currentDate">
     <template v-slot:dateCell="{ date, data }">
       <div :data-tmp="
-          ((HD = getHoliday(data.day)),
+        ((HD = getHoliday(data.day)),
           (events = eventListFromDay(data.day)),
           (ix = 0))
-        "
-           style="height: 100%;"
-      >
+      " style="height: 100%;">
         <div :class="
-            'day ' + ([0, 6].includes(date.getDay()) ? 'weekend ' : '') + (HD ? HD.status && (HD.status == '1' ? 'holiday' : 'work') : '')
-          "
-        >
-          <span
-              :class="
-              'holiday-sign ' + (HD ? (HD.status == '1' ? 'rest' : 'work') : '')
-            "
-              v-text="HD ? HD.status && (HD.status == '1' ? '休' : '班') : ''"
-          ></span>
-          <span
-              class="daynumber"
-              v-text="data.day.split('-').slice(2).join('-')"
-          ></span>
+          'day ' + ([0, 6].includes(date.getDay()) ? 'weekend ' : '') + (HD ? HD.status && (HD.status == '1' ? 'holiday' : 'work') : '')
+        ">
+          <span :class="
+            'holiday-sign ' + (HD ? (HD.status == '1' ? 'rest' : 'work') : '')
+          " v-text="HD ? HD.status && (HD.status == '1' ? '休' : '班') : ''"></span>
+          <span class="daynumber" v-text="data.day.split('-').slice(2).join('-')"></span>
           <span class="term">{{ HD && HD.term }}</span>
           <template v-if="events.data.length > 0">
             <div class="events">
-              <div
-                  :class="'chara ' + (events.types.chara > 0 ? 'active' : '')"
-                  v-show="events.types.chara > 0"
-              >
+              <div :class="'chara ' + (events.types.chara > 0 ? 'active' : '')" v-show="events.types.chara > 0">
                 <span v-text="events.types.chara"></span>
               </div>
-              <div
-                  :class="'show ' + (events.types.show > 0 ? 'active' : '')"
-                  v-show="events.types.show > 0"
-              >
+              <div :class="'show ' + (events.types.show > 0 ? 'active' : '')" v-show="events.types.show > 0">
                 <span v-text="events.types.show"></span>
               </div>
-              <div
-                  :class="
-                  'official ' + (events.types.official > 0 ? 'active' : '')
-                "
-                  v-show="events.types.official > 0"
-              >
+              <div :class="
+                'official ' + (events.types.official > 0 ? 'active' : '')
+              " v-show="events.types.official > 0">
                 <span v-text="events.types.official"></span>
               </div>
             </div>
@@ -51,31 +33,20 @@
                 <div :key="index">
                   <template v-for="(eventData, index2) in eventsData">
                     <div v-if="index2 == 0" :key="index2 + '_b'">
-                      <strong
-                          v-text="
-                          eventData.startDate +
-                          (eventData.startDate != eventData.endDate
-                            ? '至' + eventData.endDate
-                            : '')
-                        "
-                      ></strong
-                      >：
+                      <strong v-text="
+                        eventData.startDate +
+                        (eventData.startDate != eventData.endDate
+                          ? '至' + eventData.endDate
+                          : '')
+                      "></strong>：
                     </div>
                     <div :key="index2">
-                      <strong
-                      >{{ (ix = ix + 1) }}.{{
+                      <strong>{{ (ix = ix + 1) }}.{{
                           eventData.type ? eventData.type + "　" : ""
-                        }}</strong
-                      ><span v-html="eventData.desc"></span>　
-                      <el-link
-                          :href="'/' + eventData.event"
-                          target="_blank"
-                          :title="eventData.name"
-                          type="primary"
-                          style="float: right"
-                      ><i class="el-icon-paperclip"></i>详情
-                      </el-link
-                      >
+                      }}</strong><span v-html="eventData.desc"></span>　
+                      <el-link :href="'/' + eventData.event" target="_blank" :title="eventData.name" type="primary"
+                        style="float: right"><i class="el-icon-paperclip"></i>详情
+                      </el-link>
                     </div>
                   </template>
                 </div>
@@ -106,21 +77,21 @@ export default {
   watch: {
     currentDate(nVal, oVal) {
       if (
-          nVal.getFullYear() != oVal.getFullYear() ||
-          nVal.getMonth() != oVal.getMonth()
+        nVal.getFullYear() != oVal.getFullYear() ||
+        nVal.getMonth() != oVal.getMonth()
       ) {
         this.getBaiduDays(nVal);
         this.getEventDate(
-            nVal
-                .getMonthFirstDay()
-                .addDays(-1)
-                .getMonthFirstDay()
-                .Format("yyyy-MM-dd"),
-            nVal
-                .getMonthLastDay()
-                .addDays(1)
-                .getMonthLastDay()
-                .Format("yyyy-MM-dd")
+          nVal
+            .getMonthFirstDay()
+            .addDays(-1)
+            .getMonthFirstDay()
+            .Format("yyyy-MM-dd"),
+          nVal
+            .getMonthLastDay()
+            .addDays(1)
+            .getMonthLastDay()
+            .Format("yyyy-MM-dd")
         );
       }
     },
@@ -128,16 +99,16 @@ export default {
   created() {
     this.getBaiduDays();
     this.getEventDate(
-        this.currentDate
-            .getMonthFirstDay()
-            .addDays(-1)
-            .getMonthFirstDay()
-            .Format("yyyy-MM-dd"),
-        this.currentDate
-            .getMonthLastDay()
-            .addDays(1)
-            .getMonthLastDay()
-            .Format("yyyy-MM-dd")
+      this.currentDate
+        .getMonthFirstDay()
+        .addDays(-1)
+        .getMonthFirstDay()
+        .Format("yyyy-MM-dd"),
+      this.currentDate
+        .getMonthLastDay()
+        .addDays(1)
+        .getMonthLastDay()
+        .Format("yyyy-MM-dd")
     );
   },
   methods: {
@@ -147,7 +118,7 @@ export default {
       let month = date.getMonth() + 1;
       let _this = this;
       let t = new Date().getTime();
-      jsonp(`https://sp1.baidu.com/8aQDcjqpAAV3otqbppnN2DJv/api.php?tn=wisetpl&format=json&resource_id=39043&query=${year}年${month}月&t=${t}`,{ param:"cb"},(err,ret)=>{
+      jsonp(`https://sp1.baidu.com/8aQDcjqpAAV3otqbppnN2DJv/api.php?tn=wisetpl&format=json&resource_id=39043&query=${year}年${month}月&t=${t}`, { param: "cb" }, (err, ret) => {
         if (ret.status == "0" && ret.data[0]) {
           let data = ret.data[0]["almanac"];
           // data = data.filter(function (v) {
@@ -176,8 +147,8 @@ export default {
       day = new Date(day + " GMT+0800");
       let hd = this.baiduDays.filter(function (v) {
         return (
-            new Date(v.startDate + " GMT+0800") <= day &&
-            new Date(v.endDate + " GMT+0800") >= day
+          new Date(v.startDate + " GMT+0800") <= day &&
+          new Date(v.endDate + " GMT+0800") >= day
         );
       });
       if (hd.length > 0) {
@@ -190,7 +161,7 @@ export default {
       if (this.userList.length > 0) {
         this.dateList = this.userList;
       } else {
-        axios.get(`https://calendar.thwiki.cc/events/${startDate}/${endDate}`).then(ret=>{
+        axios.get(`${window.calendarAPIUrl}/${startDate}/${endDate}`).then(ret => {
           this.parseResult(ret.data);
         });
       }
@@ -215,8 +186,8 @@ export default {
             type = item.type[0];
           } else if (item.icon) {
             type = decodeURI(item.icon).replace(
-                /.+\/文件:事件图标-(.*).svg/,
-                "$1"
+              /.+\/文件:事件图标-(.*).svg/,
+              "$1"
             );
           }
           eventData.push({
@@ -238,8 +209,8 @@ export default {
       let events = this.dateList.filter(function (v) {
         v = v.filter(function (v1) {
           return (
-              new Date(v1.startDate + " GMT+0800") <= day &&
-              new Date(v1.endDate + " GMT+0800") >= day
+            new Date(v1.startDate + " GMT+0800") <= day &&
+            new Date(v1.endDate + " GMT+0800") >= day
           );
         });
         return v.length > 0;
@@ -556,5 +527,106 @@ export default {
   .day .daynumber {
     font-size: 12px;
   }
+}
+
+.darkMode .el-calendar__header {
+  background-color: #111416;
+}
+
+.darkMode .el-calendar__title {
+  color: #ccc;
+}
+
+.darkMode .el-button {
+  background: #111416;
+  color: #ccc;
+}
+
+.darkMode .el-button:focus,
+.darkMode .el-button:hover {
+  color: #fff;
+  background-color: #000
+}
+
+.darkMode .el-calendar__body {
+  background: #111416;
+}
+
+.darkMode .el-calendar-table .el-calendar-day:hover {
+  background-color: #63676e;
+}
+
+.darkMode .el-calendar-table thead th {
+  color: #c4c9d3;
+}
+
+.darkMode .el-calendar-table td.is-selected {
+  background-color: #63676e;
+}
+
+.darkMode .day .daynumber {
+  color: rgb(255 255 255 / 50%);
+}
+
+.darkMode .day .term {
+  color: #aaa9a9;
+}
+
+.darkMode .day.work {
+  background: #727275;
+}
+
+.darkMode .day.holiday {
+  background: #643234;
+}
+
+.darkMode .day.holiday .daynumber,
+.darkMode .day.weekend .daynumber {
+  color: #dd6161;
+}
+
+.darkMode .day .holiday-sign.work {
+  color: #c8bebe;
+}
+
+.darkMode .day .holiday-sign.rest {
+  color: #dd6161;
+}
+
+.darkMode .day .events {
+  color: #ccc;
+}
+
+.darkMode .events .chara.active span,
+.darkMode .calendar-footer .events div.chara span {
+  background-color: #e91e63;
+}
+
+.darkMode .events .jashow.active span,
+.darkMode .calendar-footer .events div.jashow span {
+  background-color: #4be8ff;
+}
+
+.darkMode .events .cnshow.active span,
+.darkMode .calendar-footer .events div.cnshow span {
+  background-color: #fffdbe;
+}
+
+.darkMode .events .show.active span,
+.darkMode .calendar-footer .events div.show span {
+  background-color: #4caf50;
+}
+
+.darkMode .events .official.active span,
+.darkMode .calendar-footer .events div.official span {
+  background-color: #9c27b0;
+}
+
+.darkMode .calendar-footer {
+  background-color: #111416;
+}
+
+.darkMode .calendar-footer .events {
+  color: #ccc;
 }
 </style>

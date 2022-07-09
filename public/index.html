@@ -9,17 +9,17 @@
   <title>
     <%= htmlWebpackPlugin.options.title %>
   </title>
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3"></script>
 </head>
 
 <body>
+<!-- <body class="skin-vampire"> -->
   <noscript>
     <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
         Please enable it to continue.</strong>
   </noscript>
   <!-- 以下需要复制到HTML -->
   <!-- {{=<% %>=}} -->
-  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.runtime.min.js"></script>
   <div class="app-calendar"></div>
   <script>
     /** 格式化Date对象 */
@@ -86,6 +86,7 @@
     }
   </script>
   <script>
+    window.calendarAPIUrl = 'https://calendar-serverless.thwiki.cc/api/events';
     function calendarInit() {
       var cdID = new Date().getTime();
       var userJson = ``;

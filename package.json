@@ -45,7 +45,8 @@
     "rules": {
       "no-irregular-whitespace": "off",
       "no-unused-vars": "off",
-      "vue/no-unused-vars": "off"
+      "vue/no-unused-vars": "off",
+      "no-mixed-spaces-and-tabs": "off"
     }
   },
   "browserslist": [
