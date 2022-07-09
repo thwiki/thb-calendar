@@ -1,6 +1,6 @@
 {
   "name": "thb-calendar",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -45,7 +45,8 @@
     "rules": {
       "no-irregular-whitespace": "off",
       "no-unused-vars": "off",
-      "vue/no-unused-vars": "off"
+      "vue/no-unused-vars": "off",
+      "no-mixed-spaces-and-tabs": "off"
     }
   },
   "browserslist": [
