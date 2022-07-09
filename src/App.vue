@@ -1,5 +1,5 @@
 <template>
-  <div :class="'app-calendar' + (darkMode ? ' darkMode' : '')">
+  <div class="app-calendar">
     <calendar1 :userList="userList" />
     <div class="calendar-footer">
       <div class="events">
@@ -22,16 +22,12 @@ export default {
   },
   data() {
     return {
-      userList: [],
-      darkMode: false
+      userList: []
     };
   },
   created() {
     let cdID = window.calendarInit();
     this.userList = window['cdData' + cdID] || [];
-    if (document.body.className.indexOf('skin-vampire') >= 0) {
-      this.darkMode = true;
-    }
   },
 };
 </script>
