@@ -1,63 +1,112 @@
 <template>
-  <el-calendar v-model="currentDate">
-    <template v-slot:dateCell="{ date, data }">
-      <div :data-tmp="
-        ((HD = getHoliday(data.day)),
-          (events = eventListFromDay(data.day)),
-          (ix = 0))
-      " style="height: 100%;">
-        <div :class="
-          'day ' + ([0, 6].includes(date.getDay()) ? 'weekend ' : '') + (HD ? HD.status && (HD.status == '1' ? 'holiday' : 'work') : '')
-        ">
-          <span :class="
-            'holiday-sign ' + (HD ? (HD.status == '1' ? 'rest' : 'work') : '')
-          " v-text="HD ? HD.status && (HD.status == '1' ? '休' : '班') : ''"></span>
-          <span class="daynumber" v-text="data.day.split('-').slice(2).join('-')"></span>
-          <span class="term">{{ HD && HD.term }}</span>
-          <template v-if="events.data.length > 0">
-            <div class="events">
-              <div :class="'chara ' + (events.types.chara > 0 ? 'active' : '')" v-show="events.types.chara > 0">
-                <span v-text="events.types.chara"></span>
-              </div>
-              <div :class="'show ' + (events.types.show > 0 ? 'active' : '')" v-show="events.types.show > 0">
-                <span v-text="events.types.show"></span>
-              </div>
-              <div :class="
-                'official ' + (events.types.official > 0 ? 'active' : '')
-              " v-show="events.types.official > 0">
-                <span v-text="events.types.official"></span>
-              </div>
-            </div>
-            <el-popover width="300" trigger="hover" placement="top-start">
-              <template v-for="(eventsData, index) in events.data">
-                <div :key="index">
-                  <template v-for="(eventData, index2) in eventsData">
-                    <div v-if="index2 == 0" :key="index2 + '_b'">
-                      <strong v-text="
-                        eventData.startDate +
-                        (eventData.startDate != eventData.endDate
-                          ? '至' + eventData.endDate
-                          : '')
-                      "></strong>：
-                    </div>
-                    <div :key="index2">
-                      <strong>{{ (ix = ix + 1) }}.{{
-                          eventData.type ? eventData.type + "　" : ""
-                      }}</strong><span v-html="eventData.desc"></span>　
-                      <el-link :href="'/' + eventData.event" target="_blank" :title="eventData.name" type="primary"
-                        style="float: right"><i class="el-icon-paperclip"></i>详情
-                      </el-link>
-                    </div>
-                  </template>
+  <div style="background-color: #fff">
+    <div class="monthSel">
+      <div>东方事件日历</div>
+      <el-date-picker
+        v-model="currentDate"
+        type="month"
+        placeholder="选择月"
+        size="mini"
+        :clearable="false"
+        align="right"
+        :editable="false"
+        :picker-options="datePickerOptions"
+      >
+      </el-date-picker>
+    </div>
+    <el-calendar v-model="currentDate">
+      <template v-slot:dateCell="{ date, data }">
+        <div
+          :data-tmp="
+            ((HD = getHoliday(data.day)),
+            (events = eventListFromDay(data.day)),
+            (ix = 0))
+          "
+          style="height: 100%"
+        >
+          <div
+            :class="
+              'day ' +
+              ([0, 6].includes(date.getDay()) ? 'weekend ' : '') +
+              (HD ? HD.status && (HD.status == '1' ? 'holiday' : 'work') : '')
+            "
+          >
+            <span
+              :class="
+                'holiday-sign ' +
+                (HD ? (HD.status == '1' ? 'rest' : 'work') : '')
+              "
+              v-text="HD ? HD.status && (HD.status == '1' ? '休' : '班') : ''"
+            ></span>
+            <span
+              class="daynumber"
+              v-text="data.day.split('-').slice(2).join('-')"
+            ></span>
+            <span class="term">{{ HD && HD.term }}</span>
+            <template v-if="events.data.length > 0">
+              <div class="events">
+                <div
+                  :class="'chara ' + (events.types.chara > 0 ? 'active' : '')"
+                  v-show="events.types.chara > 0"
+                >
+                  <span v-text="events.types.chara"></span>
                 </div>
-              </template>
-              <div class="eventBtn" slot="reference"></div>
-            </el-popover>
-          </template>
+                <div
+                  :class="'show ' + (events.types.show > 0 ? 'active' : '')"
+                  v-show="events.types.show > 0"
+                >
+                  <span v-text="events.types.show"></span>
+                </div>
+                <div
+                  :class="
+                    'official ' + (events.types.official > 0 ? 'active' : '')
+                  "
+                  v-show="events.types.official > 0"
+                >
+                  <span v-text="events.types.official"></span>
+                </div>
+              </div>
+              <el-popover width="300" trigger="hover" placement="top-start">
+                <template v-for="(eventsData, index) in events.data">
+                  <div :key="index">
+                    <template v-for="(eventData, index2) in eventsData">
+                      <div v-if="index2 == 0" :key="index2 + '_b'">
+                        <strong
+                          v-text="
+                            eventData.startDate +
+                            (eventData.startDate != eventData.endDate
+                              ? '至' + eventData.endDate
+                              : '')
+                          "
+                        ></strong
+                        >：
+                      </div>
+                      <div :key="index2">
+                        <strong
+                          >{{ (ix = ix + 1) }}.{{
+                            eventData.type ? eventData.type + "　" : ""
+                          }}</strong
+                        ><span v-html="eventData.desc"></span>　
+                        <el-link
+                          :href="'/' + eventData.event"
+                          target="_blank"
+                          :title="eventData.name"
+                          type="primary"
+                          style="float: right"
+                          ><i class="el-icon-paperclip"></i>详情
+                        </el-link>
+                      </div>
+                    </template>
+                  </div>
+                </template>
+                <div class="eventBtn" slot="reference"></div>
+              </el-popover>
+            </template>
+          </div>
         </div>
-      </div>
-    </template>
-  </el-calendar>
+      </template>
+    </el-calendar>
+  </div>
 </template>
 <script>
 import axios from "axios";
@@ -69,6 +118,16 @@ export default {
       baiduDays: [],
       dateList: [],
       currentDate: new Date(),
+      datePickerOptions: {
+        shortcuts: [
+          {
+            text: "今年当月",
+            onClick(picker) {
+              picker.$emit("pick", new Date());
+            },
+          },
+        ],
+      },
     };
   },
   props: {
@@ -118,37 +177,41 @@ export default {
       let month = date.getMonth() + 1;
       let _this = this;
       let t = new Date().getTime();
-      jsonp(`https://sp1.baidu.com/8aQDcjqpAAV3otqbppnN2DJv/api.php?tn=wisetpl&format=json&resource_id=39043&query=${year}年${month}月&t=${t}`, { param: "cb" }, (err, ret) => {
-        if (ret.status == "0" && ret.data[0]) {
-          let data = ret.data[0]["almanac"];
-          // data = data.filter(function (v) {
-          //     if (v.status) {
-          //         return true;
-          //     }
-          //     return false;
-          // });
-          data = data.map(function (v) {
-            let time = new Date(v.oDate).Format("yyyy-MM-dd");
-            let lunarDate = v.lunarDate == "1" ? v.lMonth + "月" : v.lDate;
-            return {
-              startDate: time,
-              endDate: time,
-              event: "",
-              desc: "",
-              status: v.status || "",
-              term: v.term ? v.term.split(" ")[0] : lunarDate,
-            };
-          });
-          _this.baiduDays = data;
+      jsonp(
+        `https://sp1.baidu.com/8aQDcjqpAAV3otqbppnN2DJv/api.php?tn=wisetpl&format=json&resource_id=39043&query=${year}年${month}月&t=${t}`,
+        { param: "cb" },
+        (err, ret) => {
+          if (ret.status == "0" && ret.data.length > 0) {
+            let data = ret.data[0]["almanac"];
+            // data = data.filter(function (v) {
+            //     if (v.status) {
+            //         return true;
+            //     }
+            //     return false;
+            // });
+            data = data.map(function (v) {
+              let time = new Date(v.oDate).Format("yyyy-MM-dd");
+              let lunarDate = v.lunarDate == "1" ? v.lMonth + "月" : v.lDate;
+              return {
+                startDate: time,
+                endDate: time,
+                event: "",
+                desc: "",
+                status: v.status || "",
+                term: v.term ? v.term.split(" ")[0] : lunarDate,
+              };
+            });
+            _this.baiduDays = data;
+          }
         }
-      });
+      );
     },
     getHoliday(day) {
-      day = new Date(day + " GMT+0800");
+      day = new Date(day + " 00:00+08:00");
       let hd = this.baiduDays.filter(function (v) {
         return (
-          new Date(v.startDate + " GMT+0800") <= day &&
-          new Date(v.endDate + " GMT+0800") >= day
+          new Date(v.startDate + " 00:00+08:00") <= day &&
+          new Date(v.endDate + " 00:00+08:00") >= day
         );
       });
       if (hd.length > 0) {
@@ -161,9 +224,11 @@ export default {
       if (this.userList.length > 0) {
         this.dateList = this.userList;
       } else {
-        axios.get(`${window.calendarAPIUrl}/${startDate}/${endDate}`).then(ret => {
-          this.parseResult(ret.data);
-        });
+        axios
+          .get(`${window.calendarAPIUrl}/${startDate}/${endDate}`)
+          .then((ret) => {
+            this.parseResult(ret.data);
+          });
       }
     },
     parseResult(result) {
@@ -205,12 +270,12 @@ export default {
       });
     },
     eventListFromDay(day) {
-      day = new Date(day + " GMT+0800");
+      day = new Date(day + " 00:00+08:00");
       let events = this.dateList.filter(function (v) {
         v = v.filter(function (v1) {
           return (
-            new Date(v1.startDate + " GMT+0800") <= day &&
-            new Date(v1.endDate + " GMT+0800") >= day
+            new Date(v1.startDate + " 00:00+08:00") <= day &&
+            new Date(v1.endDate + " 00:00+08:00") >= day
           );
         });
         return v.length > 0;
@@ -261,20 +326,20 @@ export default {
   --calendar-back-color: initial;
   --calendar-font-color: initial;
   --calendar-footer-back-color: #fff;
-  --calendar-link-color: #409EFF;
+  --calendar-link-color: #409eff;
 
   /* day */
-  --calendar-day-holiday-color: #FDE3E4;
+  --calendar-day-holiday-color: #fde3e4;
   --calendar-day-work-color: #f5f5f6;
 
-  --calendar-day-hover-color: #BDBFC8;
-  --calendar-day-hover-holiday-color: #F38686;
+  --calendar-day-hover-color: #bdbfc8;
+  --calendar-day-hover-holiday-color: #f38686;
 
-  --calendar-day-sign-holiday-color: #F73131;
+  --calendar-day-sign-holiday-color: #f73131;
   --calendar-day-sign-work-color: #575050;
 
   --calendar-day-number-color: #222222;
-  --calendar-day-sign-number-color: #F73131;
+  --calendar-day-sign-number-color: #f73131;
 
   --calendar-day-term-color: #333;
 
@@ -297,8 +362,8 @@ export default {
   --calendar-day-holiday-color: #643234;
   --calendar-day-work-color: #727275;
 
-  --calendar-day-hover-color: #BDBFC8;
-  --calendar-day-hover-holiday-color: #F38686;
+  --calendar-day-hover-color: #bdbfc8;
+  --calendar-day-hover-holiday-color: #f38686;
 
   --calendar-day-sign-holiday-color: #dd6161;
   --calendar-day-sign-work-color: #c8bebe;
@@ -320,17 +385,8 @@ export default {
   box-sizing: border-box;
   padding: 1px;
   padding-top: 0px;
-  background-image: linear-gradient(to left, #EEB158 0%, #F5A6E7 100%);
-}
-
-.app-calendar,
-.el-calendar {
+  background-image: linear-gradient(to left, #eeb158 0%, #f5a6e7 100%);
   border-radius: 10px;
-}
-
-.el-calendar {
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0px;
 }
 
 .calendar-footer {
@@ -375,21 +431,26 @@ export default {
 }
 
 .el-calendar {
-  background-image: linear-gradient(to left, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url(https://thwiki.cc/logo.png);
+  background-image: linear-gradient(
+      to left,
+      rgba(255, 255, 255, 0.85),
+      rgba(255, 255, 255, 0.85)
+    ),
+    url(https://thwiki.cc/logo.png);
   background-position: 100% 118%;
   background-repeat: no-repeat;
 }
 
 .el-calendar__header {
-  background-image: linear-gradient(to left, #EEB158 0%, #F5A6E7 100%);
-  background-image: -webkit-linear-gradient(to left, #EEB158 0%, #F5A6E7 100%);
-  background-image: -moz-linear-gradient(to left, #EEB158 0%, #F5A6E7 100%);
+  /* background-image: linear-gradient(to left, #eeb158 0%, #f5a6e7 100%);
+  background-image: -webkit-linear-gradient(to left, #eeb158 0%, #f5a6e7 100%);
+  background-image: -moz-linear-gradient(to left, #eeb158 0%, #f5a6e7 100%);
   background-size: 100% 20%;
   background-repeat: no-repeat;
-  border-radius: 10px 10px 0px 0px;
+  border-radius: 10px 10px 0px 0px; */
   background-color: var(--calendar-back-color);
-  border-bottom: 1px solid #F5A6E7;
-  padding: 12px 20px 3px 20px;
+  border-bottom: 1px solid #f5a6e7;
+  padding: 5px 20px 3px 20px;
 }
 
 .el-calendar__title {
@@ -447,11 +508,11 @@ export default {
 }
 
 .day:hover {
-  border: 2px solid #BDBFC8;
+  border: 2px solid #bdbfc8;
 }
 
 .day.holiday:hover {
-  border: 2px solid #F38686;
+  border: 2px solid #f38686;
 }
 
 .day .holiday-sign {
@@ -576,7 +637,25 @@ export default {
   }
 }
 
-.skin-vampire .el-button {
+.monthSel {
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--calendar-back-color);
+  color: var(--calendar-font-color);
+  align-items: center;
+  padding: 0px 20px;
+  padding-top: 15px;
+  background-image: linear-gradient(to left, #eeb158 0%, #f5a6e7 100%);
+  background-image: -webkit-linear-gradient(to left, #eeb158 0%, #f5a6e7 100%);
+  background-image: -moz-linear-gradient(to left, #eeb158 0%, #f5a6e7 100%);
+  background-size: 100% 20%;
+  background-repeat: no-repeat;
+  border-radius: 10px 10px 0px 0px;
+}
+
+.skin-vampire .el-button,
+.skin-vampire .el-picker-panel,
+.skin-vampire .el-input__inner {
   background: var(--calendar-back-color);
   color: var(--calendar-font-color);
 }
@@ -584,14 +663,15 @@ export default {
 .skin-vampire .el-button:focus,
 .skin-vampire .el-button:hover {
   color: #fff;
-  background-color: #000
+  background-color: #000;
 }
 
 .skin-vampire .el-calendar__body {
   background: var(--calendar-back-color);
 }
 
-.skin-vampire .el-calendar-table .el-calendar-day:hover {
+.skin-vampire .el-calendar-table .el-calendar-day:hover,
+.skin-vampire .el-calendar-table td.is-selected {
   background-color: #63676e;
 }
 
@@ -599,7 +679,18 @@ export default {
   color: #c4c9d3;
 }
 
-.skin-vampire .el-calendar-table td.is-selected {
-  background-color: #63676e;
+.skin-vampire .el-picker-panel__icon-btn {
+  color: #606266;
+}
+
+.skin-vampire .el-date-picker__header-label.active,
+.skin-vampire .el-date-picker__header-label:hover,
+.skin-vampire .el-year-table td .cell:hover,
+.skin-vampire .el-year-table td.current:not(.disabled) .cell,
+.skin-vampire .el-year-table td.today .cell,
+.skin-vampire .el-month-table td.today .cell,
+.skin-vampire .el-month-table td.current:not(.disabled) .cell,
+.skin-vampire .el-month-table td .cell:hover {
+  color: var(--calendar-link-color);
 }
 </style>
