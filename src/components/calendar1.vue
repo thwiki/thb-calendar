@@ -1,7 +1,7 @@
 <template>
   <div style="background-color: #fff">
     <div class="monthSel">
-      <div>东方事件日历</div>
+      <div>日历</div>
       <el-date-picker
         v-model="currentDate"
         type="month"
@@ -10,7 +10,6 @@
         :clearable="false"
         align="right"
         :editable="false"
-        :picker-options="datePickerOptions"
       >
       </el-date-picker>
     </div>
@@ -97,7 +96,7 @@
                         </el-link>
                       </div>
                     </template>
-                  </div>
+                   </div>
                 </template>
                 <div class="eventBtn" slot="reference"></div>
               </el-popover>
@@ -436,7 +435,7 @@ export default {
       rgba(255, 255, 255, 0.85),
       rgba(255, 255, 255, 0.85)
     ),
-    url(https://thwiki.cc/logo.png);
+    url(https://static.thwiki.cc/logo.png);
   background-position: 100% 118%;
   background-repeat: no-repeat;
 }

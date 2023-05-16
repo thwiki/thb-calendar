@@ -1,2 +1,2 @@
-新增年月选择
-修复Firefox与Safari不显示日历数据的BUG
+更换THBLOGO新地址
+取消快捷年月选择
