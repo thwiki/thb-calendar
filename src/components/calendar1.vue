@@ -96,7 +96,7 @@
                         </el-link>
                       </div>
                     </template>
-                   </div>
+                  </div>
                 </template>
                 <div class="eventBtn" slot="reference"></div>
               </el-popover>
@@ -139,37 +139,22 @@ export default {
         nVal.getMonth() != oVal.getMonth()
       ) {
         this.getBaiduDays(nVal);
-        this.getEventDate(
-          nVal
-            .getMonthFirstDay()
-            .addDays(-1)
-            .getMonthFirstDay()
-            .Format("yyyy-MM-dd"),
-          nVal
-            .getMonthLastDay()
-            .addDays(1)
-            .getMonthLastDay()
-            .Format("yyyy-MM-dd")
-        );
+        const { firstDay, lastDay } = this.getMonthRange(nVal);
+        this.getEventDate(firstDay, lastDay);
       }
     },
   },
   created() {
     this.getBaiduDays();
-    this.getEventDate(
-      this.currentDate
-        .getMonthFirstDay()
-        .addDays(-1)
-        .getMonthFirstDay()
-        .Format("yyyy-MM-dd"),
-      this.currentDate
-        .getMonthLastDay()
-        .addDays(1)
-        .getMonthLastDay()
-        .Format("yyyy-MM-dd")
-    );
+    const { firstDay, lastDay } = this.getMonthRange(this.currentDate);
+    this.getEventDate(firstDay, lastDay);
   },
   methods: {
+    getMonthRange(date) {
+      let firstDay = date.getMonthFirstDay().addDays(-6).Format("yyyy-MM-dd");
+      let lastDay = date.getMonthLastDay().addDays(6).Format("yyyy-MM-dd");
+      return { firstDay, lastDay };
+    },
     getBaiduDays(date) {
       if (!date) date = this.currentDate;
       let year = date.getFullYear();
@@ -206,20 +191,15 @@ export default {
       );
     },
     getHoliday(day) {
-      day = new Date(day + " 00:00+08:00");
+      day = new Date(day + " 00:00+08:00").getTime();
       let hd = this.baiduDays.filter(function (v) {
-        return (
-          new Date(v.startDate + " 00:00+08:00") <= day &&
-          new Date(v.endDate + " 00:00+08:00") >= day
-        );
+        let startDate = new Date(v.startDate + " 00:00+08:00").getTime();
+        let endDate = new Date(v.endDate + " 00:00+08:00").getTime();
+        return startDate <= day && endDate >= day;
       });
-      if (hd.length > 0) {
-        return hd[0];
-      }
-      return null;
+      return hd.length > 0 ? hd[0] : null;
     },
     getEventDate(startDate, endDate) {
-      let _this = this;
       if (this.userList.length > 0) {
         this.dateList = this.userList;
       } else {
@@ -269,13 +249,12 @@ export default {
       });
     },
     eventListFromDay(day) {
-      day = new Date(day + " 00:00+08:00");
+      day = new Date(day + " 00:00+08:00").getTime();
       let events = this.dateList.filter(function (v) {
         v = v.filter(function (v1) {
-          return (
-            new Date(v1.startDate + " 00:00+08:00") <= day &&
-            new Date(v1.endDate + " 00:00+08:00") >= day
-          );
+          let startDate = new Date(v1.startDate + " 00:00+08:00").getTime();
+          let endDate = new Date(v1.endDate + " 00:00+08:00").getTime();
+          return startDate <= day && endDate >= day;
         });
         return v.length > 0;
       });
